@@ -1,4 +1,4 @@
-import { clearUserData, getToken } from "@/lib/utils";
+import { clearUserData, getOwnerData, getToken } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { FaStore } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
@@ -8,9 +8,13 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [token, setToken] = useState(null);
   const [logout, setLogout] = useState(false);
+  const [user, setUser] = useState(null);
+
+  const user_name = user?.name.split(" ")[0];
 
   useEffect(() => {
     setToken(getToken());
+    setUser(getOwnerData());
   }, [logout]);
 
   const handleLogout = () => {
@@ -22,27 +26,38 @@ const Navbar = () => {
   return (
     <div className="w-full h-16 border-b border-gray-400 px-20 flex items-center justify-between">
       <div
-        className="flex items-center justify-center gap-2 text-3xl font-sans font-semibold"
+        className="flex items-center justify-center gap-2 text-3xl font-sans font-semibold cursor-pointer"
         onClick={() => navigate("/")}
       >
         <FaStore />
         <p>Store</p>
       </div>
       <div className="flex items-center justify-center gap-4 text-lg font-sans font-semibold">
-        <button className="hover:scale-105 transition-all duration-500 ease-in-out hover:text-purple-300">
+        <button
+          className="hover:scale-105 transition-all duration-500 ease-in-out hover:text-purple-500"
+          onClick={() => navigate("/")}
+        >
           Home
         </button>
-        <button className="hover:scale-105 transition-all duration-500 ease-in-out hover:text-purple-300">
+        {token && (
+          <button
+            className="hover:scale-105 transition-all duration-500 ease-in-out hover:text-purple-500"
+            onClick={() => navigate("/dashboard")}
+          >
+            Dashboard
+          </button>
+        )}
+        <button className="hover:scale-105 transition-all duration-500 ease-in-out hover:text-purple-500">
           Products
         </button>
-        <button className="hover:scale-105 transition-all duration-500 ease-in-out hover:text-purple-300">
+        <button className="hover:scale-105 transition-all duration-500 ease-in-out hover:text-purple-500">
           About
         </button>
       </div>
       {token ? (
         <Select>
           <SelectTrigger className="w-[150px] border-gray-600">
-            User Name
+            {user_name}
           </SelectTrigger>
           <SelectContent className="text-base border-gray-600 bg-zinc-50 font-sans font-medium text-center">
             <button onClick={handleLogout}>Log out</button>
