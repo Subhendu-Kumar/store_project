@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { signupSchema } from "@/lib/validations";
 import savingLogo from "../../../public/saving.gif";
 import { saveUserData } from "@/lib/utils";
+import AlertDialogLoader from "@/components/AlertDialogLoader";
 
 const Auth = () => {
   const { toast } = useToast();
@@ -214,27 +215,15 @@ const Auth = () => {
           </div>
         </CardFooter>
       </Card>
-      <AlertDialog open={isLoading} onOpenChange={setIsLoading}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {isSignUp
-                ? "Sending signup data to server"
-                : "Checking login info with server"}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone.
-            </AlertDialogDescription>
-            <div className="w-full h-36 mt-6 flex items-center justify-center">
-              <img
-                src={savingLogo}
-                alt="saving"
-                className="w-full h-full object-contain object-center"
-              />
-            </div>
-          </AlertDialogHeader>
-        </AlertDialogContent>
-      </AlertDialog>
+      <AlertDialogLoader
+        title={
+          isSignUp
+            ? "Saving signup data to server"
+            : "Checking login info with server"
+        }
+        open={isLoading}
+        onOpenChange={setIsLoading}
+      />
     </div>
   );
 };
