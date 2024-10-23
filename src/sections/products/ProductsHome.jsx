@@ -1,8 +1,10 @@
-import { product_items } from "@/data";
 import { useState } from "react";
+import Categories from "./Categories";
+import { product_items } from "@/data";
 
 const ProductsHome = () => {
-  const [tab, setTab] = useState("all_products");
+  const [tab, setTab] = useState("categories");
+
   return (
     <div className="w-full h-full p-4 overflow-y-scroll pb-20">
       <h1 className="text-2xl font-semibold font-sans border-b border-gray-500 pb-3">
@@ -25,6 +27,7 @@ const ProductsHome = () => {
           );
         })}
       </div>
+      {tab === "categories" && <Categories />}
     </div>
   );
 };

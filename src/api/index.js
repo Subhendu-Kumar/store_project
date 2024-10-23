@@ -51,3 +51,32 @@ export const addWarehouse = async (store_id, data) => {
     console.error("error: ", error);
   }
 };
+
+export const getCategories = async (store_id) => {
+  try {
+    const response = await API.get(`/stores/${store_id}/categories`);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addCategory = async (store_id, data) => {
+  try {
+    const response = await API.post(`/stores/${store_id}/categories`, data);
+    return response;
+  } catch (error) {
+    console.error("error: ", error);
+  }
+};
+
+export const deleteCategory = async (store_id, category_id) => {
+  try {
+    const response = await API.delete(
+      `/stores/${store_id}/categories/${category_id}`
+    );
+    return response;
+  } catch (error) {
+    console.log("error: ", error);
+  }
+};

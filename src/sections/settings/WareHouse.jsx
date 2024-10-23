@@ -12,11 +12,11 @@ import AlertDialogLoader from "@/components/AlertDialogLoader";
 const WareHouse = () => {
   const { toast } = useToast();
   const [errors, setErrors] = useState({});
-  const [store_id, setStore_id] = useState(getStoreData()?.id);
   const [fetching, setFetching] = useState(false);
   const [warehouses, setWarehouses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [store_id, setStore_id] = useState(getStoreData()?.id);
   const [openAddWarehouseDilog, setOpenAddWarehouseDilog] = useState(false);
   const [formData, setFormData] = useState({
     warehouseName: "",
@@ -109,10 +109,10 @@ const WareHouse = () => {
       {fetching ? (
         <div className="w-full h-96 flex items-center justify-center">
           <RotatingLines
-            visible={true}
             width="80"
             height="80"
             color="grey"
+            visible={true}
             strokeWidth="3"
             strokeColor="orange"
             animationDuration="0.75"

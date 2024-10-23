@@ -17,3 +17,12 @@ export const warehouseSchema = z.object({
   city: z.string().min(1, "City is required"),
   state: z.string().min(1, "State is required"),
 });
+
+export const categorySchema = z.object({
+  categoryName: z.string().min(1, { message: "Category name is required" }),
+  description: z
+    .string()
+    .min(1, { message: "Description is required" })
+    .max(500, { message: "Description should not exceed 500 characters" }),
+  active: z.boolean(),
+});

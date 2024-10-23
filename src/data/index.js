@@ -80,11 +80,11 @@ export const store_settings_items = [
 
 export const product_items = [
   {
-    id: "all_products",
-    title: "All products",
-  },
-  {
     id: "categories",
     title: "Categories",
+  },
+  {
+    id: "all_products",
+    title: "All products",
   },
 ];
