@@ -1,4 +1,5 @@
 import { clsx } from "clsx";
+import { jwtDecode } from "jwt-decode";
 import { twMerge } from "tailwind-merge";
 import { OWNER_KEY, STORE_KEY, TOKEN_KEY } from "@/config";
 
@@ -33,8 +34,28 @@ export const getOwnerData = () => {
   return owner ? JSON.parse(owner) : null;
 };
 
+// export const getToken = () => {
+//   return localStorage.getItem(TOKEN_KEY);
+// };
+
 export const getToken = () => {
-  return localStorage.getItem(TOKEN_KEY);
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (token) {
+    try {
+      const decodedToken = jwtDecode(token);
+      const currentTime = Date.now() / 1000;
+      if (decodedToken.exp && decodedToken.exp < currentTime) {
+        clearUserData();
+        return null;
+      }
+      return token;
+    } catch (error) {
+      console.log(error);
+      clearUserData();
+      return null;
+    }
+  }
+  return null;
 };
 
 export const clearUserData = () => {

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SettingsHome from "@/sections/settings/SettingsHome";
 import SidebarDesktop from "@/components/sidebar/SidebarDesktop";
+import ProductsHome from "@/sections/products/ProductsHome";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -48,6 +49,9 @@ const Dashboard = () => {
       <div className="w-full h-full bg-white">
         {tab === "store_settings" && (
           <SettingsHome subTab={subTab} setSubTab={setSubTab} />
+        )}
+        {tab === "products" && (
+          <ProductsHome />
         )}
       </div>
     </div>

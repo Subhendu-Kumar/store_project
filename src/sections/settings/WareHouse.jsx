@@ -12,7 +12,7 @@ import AlertDialogLoader from "@/components/AlertDialogLoader";
 const WareHouse = () => {
   const { toast } = useToast();
   const [errors, setErrors] = useState({});
-  const [store_id, setStore_id] = useState("");
+  const [store_id, setStore_id] = useState(getStoreData()?.id);
   const [fetching, setFetching] = useState(false);
   const [warehouses, setWarehouses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -119,7 +119,30 @@ const WareHouse = () => {
             ariaLabel="rotating-lines-loading"
           />
         </div>
-      ) : warehouses ? (
+      ) : warehouses?.length === 0 ? (
+        <div className="w-full h-auto flex flex-col items-center justify-center py-10 bg-zinc-100 rounded-lg">
+          <div className="w-60 h-60 rounded-full overflow-hidden">
+            <img
+              alt="warehouse"
+              src={WarehouseIcon}
+              className="w-full h-full object-left object-cover"
+            />
+          </div>
+          <h1 className="text-2xl font-semibold text-zinc-800 mt-2">
+            Add your warehouse
+          </h1>
+          <p className="text-base font-sans font-medium text-zinc-600">
+            Set up your warehouse to manage inventory, pickups, and deliveries
+            efficiently.
+          </p>
+          <button
+            onClick={() => setOpenAddWarehouseDilog(true)}
+            className="w-fit h-auto px-3 py-1 font-sans font-medium text-xl mt-4 bg-orange-500 text-white rounded-md"
+          >
+            Add Warehouse
+          </button>
+        </div>
+      ) : (
         <div className="w-full h-auto p-4 bg-zinc-100 flex flex-col items-center justify-center gap-4 rounded-md">
           <div className="w-full h-auto flex flex-col items-start justify-start">
             <h1 className="text-xl font-medium font-sans">Warehouses</h1>
@@ -149,10 +172,10 @@ const WareHouse = () => {
                 className="w-full h-auto p-4 bg-zinc-50 border border-gray-300 rounded-sm flex items-center justify-between"
               >
                 <div className="flex flex-col items-start justify-start">
-                  <h1 className="text-lg font-sans font-medium">
+                  <h1 className="text-lg font-sans font-medium capitalize">
                     {data.warehouseName}
                   </h1>
-                  <p className="text-sm font-sans font-light">
+                  <p className="text-sm font-sans font-light capitalize">
                     {data.areaColony}
                   </p>
                 </div>
@@ -160,29 +183,6 @@ const WareHouse = () => {
               </div>
             );
           })}
-        </div>
-      ) : (
-        <div className="w-full h-auto flex flex-col items-center justify-center py-10 bg-zinc-100 rounded-lg">
-          <div className="w-60 h-60 rounded-full overflow-hidden">
-            <img
-              alt="warehouse"
-              src={WarehouseIcon}
-              className="w-full h-full object-left object-cover"
-            />
-          </div>
-          <h1 className="text-2xl font-semibold text-zinc-800 mt-2">
-            Add your warehouse
-          </h1>
-          <p className="text-base font-sans font-medium text-zinc-600">
-            Set up your warehouse to manage inventory, pickups, and deliveries
-            efficiently.
-          </p>
-          <button
-            onClick={() => setOpenAddWarehouseDilog(true)}
-            className="w-fit h-auto px-3 py-1 font-sans font-medium text-xl mt-4 bg-orange-500 text-white rounded-md"
-          >
-            Add Warehouse
-          </button>
         </div>
       )}
     </div>
