@@ -80,3 +80,27 @@ export const deleteCategory = async (store_id, category_id) => {
     console.log("error: ", error);
   }
 };
+
+export const updateCategory = async (store_id, category_id, data) => {
+  try {
+    const response = await API.patch(
+      `/stores/${store_id}/categories/${category_id}`,
+      data
+    );
+    return response;
+  } catch (error) {
+    console.log("error: ", error);
+  }
+};
+
+export const toogleCategoryActive = async (store_id, category_id, data) => {
+  try {
+    const response = await API.patch(
+      `/stores/${store_id}/categories/${category_id}/partial-update`,
+      data
+    );
+    return response;
+  } catch (error) {
+    console.log("error: ", error);
+  }
+};

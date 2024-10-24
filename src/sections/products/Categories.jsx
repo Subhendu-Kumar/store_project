@@ -1,11 +1,18 @@
 import {
+  addCategory,
+  getCategories,
+  deleteCategory,
+  updateCategory,
+  toogleCategoryActive,
+} from "@/api";
+import {
   Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
   TableRow,
+  TableBody,
+  TableHead,
+  TableCell,
+  TableHeader,
+  TableCaption,
 } from "@/components/ui/table";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -19,7 +26,6 @@ import { RotatingLines } from "react-loader-spinner";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import CategoryIcon from "../../../public/category.jpg";
 import AlertDialogLoader from "@/components/AlertDialogLoader";
-import { addCategory, deleteCategory, getCategories } from "@/api";
 
 const Categories = () => {
   const { toast } = useToast();
@@ -27,9 +33,12 @@ const Categories = () => {
   const [fetching, setFetching] = useState(false);
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [actionType, setActionType] = useState("create");
   const [store_id, setStore_id] = useState(getStoreData()?.id);
   const [loaderDialogTitle, setLoaderDialogTitle] = useState("");
   const [categoryIdToDelete, setCategoryIdToDelete] = useState("");
+  const [categoryIdToUpdate, setCategoryIdToUpdate] = useState(false);
   const [addCategoryDialogOpen, setAddCategoryDialogOpen] = useState(false);
   const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
   const [formData, setFormData] = useState({
@@ -72,8 +81,7 @@ const Categories = () => {
     } catch (error) {
       console.log(error);
       toast({
-        title: "Error",
-        description: "Error while saving data to server",
+        title: "Error while saving data to server",
         variant: "destructive",
       });
     } finally {
@@ -102,8 +110,7 @@ const Categories = () => {
     } catch (error) {
       console.log(error);
       toast({
-        title: "Error",
-        description: "Error while deleting data from server",
+        title: "Error while deleting data from server",
         variant: "destructive",
       });
     } finally {
@@ -112,16 +119,102 @@ const Categories = () => {
     }
   };
 
+  const handleUpdateCategory = async () => {
+    setLoaderDialogTitle("Updating category to server");
+    setIsLoading(true);
+    try {
+      const res = await updateCategory(store_id, categoryIdToUpdate, formData);
+      if (res?.status === 200) {
+        setCategories(res?.data);
+        toast({
+          title: "Success",
+          description: "category updated successfully",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Error while updating data to server",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+      setFormData({
+        categoryName: "",
+        description: "",
+        active: true,
+      });
+      setAddCategoryDialogOpen(false);
+    }
+  };
+
+  const handleToogleActive = async (categoryId) => {
+    const toastId = toast({
+      title: "Updating status...",
+      description: "Please wait while we update the category status.",
+      loading: true,
+    });
+    const updatedCategories = categories.map((category) => {
+      if (category.categoryId === categoryId) {
+        return { ...category, active: !category.active };
+      }
+      return category;
+    });
+    setCategories(updatedCategories);
+    try {
+      const res = await toogleCategoryActive(store_id, categoryId, {
+        active: !categories.find((cat) => cat.categoryId === categoryId)
+          ?.active,
+      });
+      if (res?.status === 202 && res?.data) {
+        const updatedCategory = res.data;
+        const updatedCategoryList = categories.map((category) =>
+          category.categoryId === updatedCategory.categoryId
+            ? updatedCategory
+            : category
+        );
+        setCategories(updatedCategoryList);
+        toast({
+          id: toastId,
+          title: "Success",
+          description: "Category status updated successfully",
+        });
+      }
+    } catch (error) {
+      console.log("Error while updating category status:", error);
+      toast({
+        id: toastId,
+        title: "Error Failed to update category status",
+        variant: "destructive",
+      });
+      const revertedCategories = categories.map((category) => {
+        if (category.categoryId === categoryId) {
+          return { ...category, active: !category.active };
+        }
+        return category;
+      });
+      setCategories(revertedCategories);
+    }
+  };
+
+  const filteredCategory = categories.filter(
+    (category) =>
+      category.categoryName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      category.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="w-full h-auto">
       <AddCategory
         errors={errors}
         formData={formData}
         setErrors={setErrors}
+        actionType={actionType}
         setFormData={setFormData}
         open={addCategoryDialogOpen}
         submitCategoryData={submitCategoryData}
         onOpenChange={setAddCategoryDialogOpen}
+        updateCategoryData={handleUpdateCategory}
       />
       <AlertDialogLoader
         open={isLoading}
@@ -164,7 +257,10 @@ const Categories = () => {
             what they need.
           </p>
           <button
-            onClick={() => setAddCategoryDialogOpen(true)}
+            onClick={() => {
+              setActionType("create");
+              setAddCategoryDialogOpen(true);
+            }}
             className="w-fit h-auto px-3 py-1 font-sans font-medium text-xl mt-4 bg-orange-500 text-white rounded-md"
           >
             Create new category
@@ -175,11 +271,16 @@ const Categories = () => {
           <div className="w-full h-auto flex items-center justify-between">
             <Input
               type="text"
+              value={searchQuery}
               placeholder="Search categories"
               className="w-[30%] h-10 border-gray-500"
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
             <button
-              onClick={() => setAddCategoryDialogOpen(true)}
+              onClick={() => {
+                setActionType("create");
+                setAddCategoryDialogOpen(true);
+              }}
               className="w-fit h-auto px-3 py-1 font-sans font-medium text-xl bg-orange-500 text-white rounded-sm"
             >
               Create new category
@@ -208,7 +309,7 @@ const Categories = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {categories?.map((data, idx) => {
+                {filteredCategory?.map((data, idx) => {
                   return (
                     <TableRow className="h-14 hover:bg-zinc-50" key={idx}>
                       <TableCell className="font-medium text-base font-sans text-black">
@@ -223,7 +324,12 @@ const Categories = () => {
                           : data.description}
                       </TableCell>
                       <TableCell className="flex items-center text-base justify-start mt-3 gap-2">
-                        <Switch checked={data.active} />
+                        <Switch
+                          checked={data.active}
+                          onCheckedChange={() =>
+                            handleToogleActive(data.categoryId)
+                          }
+                        />
                         {data.active ? (
                           <p className="text-green-500">active</p>
                         ) : (
@@ -232,7 +338,15 @@ const Categories = () => {
                       </TableCell>
                       <TableCell className="text-right p-0">
                         <div className="w-full h-full flex justify-end gap-6 text-xl">
-                          <button className="hover:text-gray-500">
+                          <button
+                            className="hover:text-gray-500"
+                            onClick={() => {
+                              setFormData(data);
+                              setActionType("update");
+                              setCategoryIdToUpdate(data.categoryId);
+                              setAddCategoryDialogOpen(true);
+                            }}
+                          >
                             <FaEdit />
                           </button>
                           <button

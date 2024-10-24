@@ -17,6 +17,8 @@ const AddCategory = ({
   setFormData,
   onOpenChange,
   submitCategoryData,
+  updateCategoryData,
+  actionType,
 }) => {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -34,7 +36,12 @@ const AddCategory = ({
     } else {
       setErrors({});
       console.log("Form Data:", formData);
-      submitCategoryData();
+      if (actionType === "create") {
+        submitCategoryData();
+      }
+      if (actionType === "update") {
+        updateCategoryData();
+      }
     }
   };
 
@@ -42,7 +49,10 @@ const AddCategory = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[40rem]">
         <DialogHeader>
-          <DialogTitle>Add new category</DialogTitle>
+          <DialogTitle>
+            {actionType === "create" && "Add new category"}
+            {actionType === "update" && "Update category"}
+          </DialogTitle>
         </DialogHeader>
         <div className="w-full h-auto flex flex-col items-center justify-center gap-4">
           <div className="w-full h-auto flex flex-col items-start justify-start gap-1">
@@ -98,7 +108,8 @@ const AddCategory = ({
               onClick={handleSubmit}
               className="w-fit h-auto px-3 py-1 bg-orange-500 rounded-md text-lg font-sans font-medium text-white"
             >
-              Add category
+              {actionType === "create" && "Add category"}
+              {actionType === "update" && "Update category"}
             </button>
           </div>
         </div>
