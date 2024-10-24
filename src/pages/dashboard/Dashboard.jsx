@@ -2,8 +2,8 @@ import { getStoreData } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SettingsHome from "@/sections/settings/SettingsHome";
-import SidebarDesktop from "@/components/sidebar/SidebarDesktop";
 import ProductsHome from "@/sections/products/ProductsHome";
+import SidebarDesktop from "@/components/sidebar/SidebarDesktop";
 
 const Dashboard = () => {
   const navigate = useNavigate();

@@ -1,14 +1,14 @@
-import { clearUserData, getOwnerData, getToken } from "@/lib/utils";
-import { useEffect, useState } from "react";
 import { FaStore } from "react-icons/fa6";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { clearUserData, getOwnerData, getToken } from "@/lib/utils";
 import { Select, SelectContent, SelectTrigger } from "@/components/ui/select";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [logout, setLogout] = useState(false);
-  const [user, setUser] = useState(null);
 
   const user_name = user?.name.split(" ")[0];
 

@@ -13,36 +13,28 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  AlertDialog,
-  AlertDialogTitle,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogDescription,
-} from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { login, signup } from "@/api";
+import { saveUserData } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { signupSchema } from "@/lib/validations";
-import savingLogo from "../../../public/saving.gif";
-import { saveUserData } from "@/lib/utils";
 import AlertDialogLoader from "@/components/AlertDialogLoader";
 
 const Auth = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     storeName: "",
   });
-  const [errors, setErrors] = useState({});
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

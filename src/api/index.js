@@ -15,6 +15,7 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
+/*---------- auth services ----------*/
 export const signup = async (data) => {
   console.log("signup data: ", data);
   try {
@@ -34,6 +35,7 @@ export const login = async (data) => {
   }
 };
 
+/*---------- warehouse services ----------*/
 export const getWarehouses = async (store_id) => {
   try {
     const response = await API.get(`/stores/${store_id}/warehouses`);
@@ -75,6 +77,7 @@ export const updateWarehouse = async (store_id, warehouse_id, data) => {
   }
 };
 
+/*---------- category services ----------*/
 export const getCategories = async (store_id) => {
   try {
     const response = await API.get(`/stores/${store_id}/categories`);
@@ -120,6 +123,70 @@ export const toogleCategoryActive = async (store_id, category_id, data) => {
   try {
     const response = await API.patch(
       `/stores/${store_id}/categories/${category_id}/partial-update`,
+      data
+    );
+    return response;
+  } catch (error) {
+    console.log("error: ", error);
+  }
+};
+
+/*---------- media services ----------*/
+export const uploadMedia = async (data) => {
+  try {
+    const response = await API.post(`/media/upload`, data);
+    return response;
+  } catch (error) {
+    console.log("error: ", error);
+  }
+};
+
+/*---------- product services ----------*/
+export const getProducts = async (store_id) => {
+  try {
+    const response = await API.get(`/stores/${store_id}/products`);
+    return response;
+  } catch (error) {
+    console.log("error: ", error);
+  }
+};
+
+export const addProduct = async (store_id, data) => {
+  try {
+    const response = await API.post(`/stores/${store_id}/products`, data);
+    return response;
+  } catch (error) {
+    console.log("error: ", error);
+  }
+};
+
+export const deleteProduct = async (store_id, product_id) => {
+  try {
+    const response = await API.delete(
+      `/stores/${store_id}/products/${product_id}`
+    );
+    return response;
+  } catch (error) {
+    console.log("error: ", error);
+  }
+};
+
+export const updateProduct = async (store_id, product_id, data) => {
+  try {
+    const response = await API.patch(
+      `/stores/${store_id}/products/${product_id}`,
+      data
+    );
+    return response;
+  } catch (error) {
+    console.log("error: ", error);
+  }
+};
+
+export const toogleProductActive = async (store_id, product_id, data) => {
+  try {
+    const response = await API.patch(
+      `/stores/${store_id}/products/${product_id}/partial-update`,
       data
     );
     return response;

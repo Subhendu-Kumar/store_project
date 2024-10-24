@@ -1,5 +1,5 @@
-import { store_settings_items } from "@/data";
 import WareHouse from "./WareHouse";
+import { store_settings_items } from "@/data";
 
 const SettingsHome = ({ subTab, setSubTab }) => {
   return (

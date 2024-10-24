@@ -14,11 +14,11 @@ const AddCategory = ({
   errors,
   formData,
   setErrors,
+  actionType,
   setFormData,
   onOpenChange,
   submitCategoryData,
   updateCategoryData,
-  actionType,
 }) => {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
