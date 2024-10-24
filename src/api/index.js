@@ -52,6 +52,29 @@ export const addWarehouse = async (store_id, data) => {
   }
 };
 
+export const deleteWarehouse = async (store_id, warehouse_id) => {
+  try {
+    const response = await API.delete(
+      `/stores/${store_id}/warehouses/${warehouse_id}`
+    );
+    return response;
+  } catch (error) {
+    console.error("error: ", error);
+  }
+};
+
+export const updateWarehouse = async (store_id, warehouse_id, data) => {
+  try {
+    const response = await API.patch(
+      `/stores/${store_id}/warehouses/${warehouse_id}`,
+      data
+    );
+    return response;
+  } catch (error) {
+    console.error("error: ", error);
+  }
+};
+
 export const getCategories = async (store_id) => {
   try {
     const response = await API.get(`/stores/${store_id}/categories`);

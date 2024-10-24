@@ -9,12 +9,14 @@ import { warehouseSchema } from "@/lib/validations";
 
 const AddWarehouse = ({
   open,
-  setOpen,
-  setErrors,
   errors,
-  setFormData,
+  setOpen,
   formData,
+  setErrors,
+  actionType,
+  setFormData,
   submitWarehouseData,
+  updateWarehouseData,
 }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -32,7 +34,12 @@ const AddWarehouse = ({
     } else {
       setErrors({});
       console.log("Form submitted:", formData);
-      submitWarehouseData();
+      if (actionType === "create") {
+        submitWarehouseData();
+      }
+      if (actionType === "update") {
+        updateWarehouseData();
+      }
     }
   };
 

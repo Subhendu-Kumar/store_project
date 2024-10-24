@@ -1,11 +1,18 @@
+import {
+  addWarehouse,
+  getWarehouses,
+  deleteWarehouse,
+  updateWarehouse,
+} from "@/api";
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 import { getStoreData } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
-import { SlOptionsVertical } from "react-icons/sl";
-import { addWarehouse, getWarehouses } from "@/api";
-import AddWarehouse from "@/components/AddWarehouse";
 import { RotatingLines } from "react-loader-spinner";
+import AddWarehouse from "@/components/AddWarehouse";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import WarehouseIcon from "../../../public/ware_house.jpg";
 import AlertDialogLoader from "@/components/AlertDialogLoader";
 
@@ -16,8 +23,13 @@ const WareHouse = () => {
   const [warehouses, setWarehouses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [actionType, setActionType] = useState("create");
   const [store_id, setStore_id] = useState(getStoreData()?.id);
+  const [loaderDialogTitle, setLoaderDialogTitle] = useState("");
+  const [warehouseIdToDelete, setWarehouseIdToDelete] = useState("");
+  const [warehouseIdToUpdate, setWarehouseIdToUpdate] = useState("");
   const [openAddWarehouseDilog, setOpenAddWarehouseDilog] = useState(false);
+  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
   const [formData, setFormData] = useState({
     warehouseName: "",
     contactPerson: "",
@@ -48,6 +60,7 @@ const WareHouse = () => {
   }, [store_id]);
 
   const submitWarehouseData = async () => {
+    setLoaderDialogTitle("Saving warehouse data to server");
     setIsLoading(true);
     try {
       const res = await addWarehouse(store_id, formData);
@@ -82,6 +95,69 @@ const WareHouse = () => {
     }
   };
 
+  const handleDeleteWarehouse = async () => {
+    setLoaderDialogTitle("Deleting warehouse from server");
+    setIsLoading(true);
+    try {
+      const res = await deleteWarehouse(store_id, warehouseIdToDelete);
+      if (res?.status === 200) {
+        setWarehouses(res?.data);
+        toast({
+          title: "Success",
+          description: "category deleted successfully",
+        });
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Error while deleting data from server",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+      setOpenConfirmationDialog(false);
+    }
+  };
+
+  const handleUpdateWarehouse = async () => {
+    setLoaderDialogTitle("Updating warehouse to server");
+    setIsLoading(true);
+    try {
+      const res = await updateWarehouse(
+        store_id,
+        warehouseIdToUpdate,
+        formData
+      );
+      if (res?.status === 200) {
+        setWarehouses(res?.data);
+        toast({
+          title: "Success",
+          description: "warehouse updated successfully",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Error while updating data to server",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+      setFormData({
+        warehouseName: "",
+        contactPerson: "",
+        mobileNo: "",
+        flatHouseNo: "",
+        areaColony: "",
+        pinCode: "",
+        city: "",
+        state: "",
+      });
+      setOpenAddWarehouseDilog(false);
+    }
+  };
+
   const filteredWarehouses = warehouses.filter(
     (warehouse) =>
       warehouse.warehouseName
@@ -96,15 +172,23 @@ const WareHouse = () => {
         errors={errors}
         formData={formData}
         setErrors={setErrors}
+        actionType={actionType}
         setFormData={setFormData}
         open={openAddWarehouseDilog}
         setOpen={setOpenAddWarehouseDilog}
         submitWarehouseData={submitWarehouseData}
+        updateWarehouseData={handleUpdateWarehouse}
       />
       <AlertDialogLoader
         open={isLoading}
+        title={loaderDialogTitle}
         onOpenChange={setIsLoading}
-        title={"Saving warehouse data to server"}
+      />
+      <ConfirmDialog
+        open={openConfirmationDialog}
+        action={handleDeleteWarehouse}
+        onOpenChange={setOpenConfirmationDialog}
+        title="This will permanently delete the category and remove all data from our servers."
       />
       {fetching ? (
         <div className="w-full h-96 flex items-center justify-center">
@@ -136,14 +220,17 @@ const WareHouse = () => {
             efficiently.
           </p>
           <button
-            onClick={() => setOpenAddWarehouseDilog(true)}
+            onClick={() => {
+              setActionType("create");
+              setOpenAddWarehouseDilog(true);
+            }}
             className="w-fit h-auto px-3 py-1 font-sans font-medium text-xl mt-4 bg-orange-500 text-white rounded-md"
           >
             Add Warehouse
           </button>
         </div>
       ) : (
-        <div className="w-full h-auto p-4 bg-zinc-100 flex flex-col items-center justify-center gap-4 rounded-md">
+        <div className="w-full h-auto p-4 bg-gradient-to-b from-zinc-100 to-white flex flex-col items-center justify-center gap-4 rounded-md">
           <div className="w-full h-auto flex flex-col items-start justify-start">
             <h1 className="text-xl font-medium font-sans">Warehouses</h1>
             <p className="text-base font-sans font-light text-zinc-500">
@@ -155,11 +242,14 @@ const WareHouse = () => {
               type="text"
               value={searchQuery}
               placeholder="Search warehouses"
-              className="w-96 h-10 border-gray-500"
+              className="w-96 h-10 border-gray-500 bg-white"
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <button
-              onClick={() => setOpenAddWarehouseDilog(true)}
+              onClick={() => {
+                setActionType("create");
+                setOpenAddWarehouseDilog(true);
+              }}
               className="w-fit h-auto px-3 py-1 font-sans font-medium text-xl bg-orange-500 text-white rounded-md"
             >
               Add Warehouse
@@ -169,7 +259,7 @@ const WareHouse = () => {
             return (
               <div
                 key={idx}
-                className="w-full h-auto p-4 bg-zinc-50 border border-gray-300 rounded-sm flex items-center justify-between"
+                className="w-full h-auto p-4 bg-white border border-gray-300 rounded-sm flex items-center justify-between"
               >
                 <div className="flex flex-col items-start justify-start">
                   <h1 className="text-lg font-sans font-medium capitalize">
@@ -179,7 +269,37 @@ const WareHouse = () => {
                     {data.areaColony}
                   </p>
                 </div>
-                <SlOptionsVertical />
+                <div className="flex items-center justify-center gap-6 text-xl">
+                  <button
+                    className="hover:text-gray-500"
+                    onClick={() => {
+                      setFormData({
+                        warehouseName: data.warehouseName,
+                        contactPerson: data.contactPerson,
+                        mobileNo: data.mobileNo.toString(),
+                        flatHouseNo: data.flatHouseNo,
+                        areaColony: data.areaColony,
+                        pinCode: data.pinCode.toString(),
+                        city: data.city,
+                        state: data.state,
+                      });
+                      setActionType("update");
+                      setWarehouseIdToUpdate(data.warehouseId);
+                      setOpenAddWarehouseDilog(true);
+                    }}
+                  >
+                    <FaEdit />
+                  </button>
+                  <button
+                    className="hover:text-gray-500"
+                    onClick={() => {
+                      setWarehouseIdToDelete(data.warehouseId);
+                      setOpenConfirmationDialog(true);
+                    }}
+                  >
+                    <MdDelete />
+                  </button>
+                </div>
               </div>
             );
           })}
