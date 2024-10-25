@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+/*---------- Auth ----------*/
 export const signupSchema = z.object({
   name: z.string().optional(),
   email: z.string().email("Invalid email address"),
@@ -7,6 +8,7 @@ export const signupSchema = z.object({
   storeName: z.string().optional(),
 });
 
+/*---------- Warehouse ----------*/
 export const warehouseSchema = z.object({
   warehouseName: z.string().min(1, "Warehouse name is required"),
   contactPerson: z.string().min(1, "Contact person is required"),
@@ -18,6 +20,7 @@ export const warehouseSchema = z.object({
   state: z.string().min(1, "State is required"),
 });
 
+/*---------- Category ----------*/
 export const categorySchema = z.object({
   categoryName: z.string().min(1, { message: "Category name is required" }),
   description: z
@@ -25,4 +28,42 @@ export const categorySchema = z.object({
     .min(1, { message: "Description is required" })
     .max(500, { message: "Description should not exceed 500 characters" }),
   active: z.boolean(),
+});
+
+/*---------- Product ----------*/
+export const productSchema = z.object({
+  productName: z.string().min(1, "Product name is required"),
+  categoryId: z.string().min(1, "Category is required"),
+  actualPrice: z
+    .string()
+    .regex(
+      /^\d{1,6}(\.\d{1,2})?$/,
+      "Actual price must be a number with up to 6 digits and optionally 2 decimal places"
+    )
+    .refine((val) => parseFloat(val) > 0, {
+      message: "Actual price must be greater than 0",
+    }),
+  discountedPrice: z
+    .string()
+    .regex(
+      /^\d{1,6}(\.\d{1,2})?$/,
+      "Discounted price must be a number with up to 6 digits and optionally 2 decimal places"
+    )
+    .optional(),
+  productDesc: z.string().optional(),
+  weight: z
+    .string()
+    .regex(
+      /^\d{1,6}(\.\d{1,2})?$/,
+      "Weight must be a number with up to 6 digits and optionally 2 decimal places"
+    )
+    .refine((val) => parseFloat(val) >= 0, {
+      message: "Weight must be greater than or equal to 0",
+    }),
+  hsnCode: z.string().optional(),
+  photoPublicId: z.array(z.string()).max(6, "Maximum of 6 images allowed"),
+  inventoryList: z.record(
+    z.string(),
+    z.number().min(0, "Quantity must be positive")
+  ),
 });

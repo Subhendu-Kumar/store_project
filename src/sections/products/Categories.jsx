@@ -15,6 +15,7 @@ import {
   TableCaption,
 } from "@/components/ui/table";
 import { FaEdit } from "react-icons/fa";
+import Loader from "@/components/Loader";
 import { MdDelete } from "react-icons/md";
 import { getStoreData } from "@/lib/utils";
 import { useEffect, useState } from "react";
@@ -22,8 +23,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import AddCategory from "@/components/AddCategory";
-import { RotatingLines } from "react-loader-spinner";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import DefaultScreen from "@/components/DefaultScreen";
 import CategoryIcon from "../../../public/category.jpg";
 import AlertDialogLoader from "@/components/AlertDialogLoader";
 
@@ -93,6 +94,11 @@ const Categories = () => {
         active: true,
       });
     }
+  };
+
+  const handleAddCategory = () => {
+    setActionType("create");
+    setAddCategoryDialogOpen(true);
   };
 
   const handleDeleteCategory = async () => {
@@ -229,43 +235,16 @@ const Categories = () => {
       />
       {fetching ? (
         <div className="w-full h-96 flex items-center justify-center">
-          <RotatingLines
-            width="80"
-            height="80"
-            color="grey"
-            visible={true}
-            strokeWidth="3"
-            strokeColor="orange"
-            animationDuration="0.75"
-            ariaLabel="rotating-lines-loading"
-          />
+          <Loader />
         </div>
       ) : categories?.length === 0 ? (
-        <div className="w-full h-auto flex flex-col items-center justify-center py-10 mt-6 bg-zinc-100 rounded-lg">
-          <div className="w-60 h-60 rounded-full overflow-hidden">
-            <img
-              alt="warehouse"
-              src={CategoryIcon}
-              className="w-full h-full object-center object-cover"
-            />
-          </div>
-          <h1 className="text-2xl font-semibold text-zinc-800 mt-2">
-            Create categories to organize your products
-          </h1>
-          <p className="text-base font-sans font-medium text-zinc-600">
-            Organize your products with categories to help customers easily find
-            what they need.
-          </p>
-          <button
-            onClick={() => {
-              setActionType("create");
-              setAddCategoryDialogOpen(true);
-            }}
-            className="w-fit h-auto px-3 py-1 font-sans font-medium text-xl mt-4 bg-orange-500 text-white rounded-md"
-          >
-            Create new category
-          </button>
-        </div>
+        <DefaultScreen
+          img={CategoryIcon}
+          action={handleAddCategory}
+          buttonText="Create new category"
+          title="Create categories to organize your products"
+          description="Organize your products with categories to help customers easily find what they need."
+        />
       ) : (
         <div className="w-full h-auto mt-6">
           <div className="w-full h-auto flex items-center justify-between">
@@ -277,10 +256,7 @@ const Categories = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <button
-              onClick={() => {
-                setActionType("create");
-                setAddCategoryDialogOpen(true);
-              }}
+              onClick={handleAddCategory}
               className="w-fit h-auto px-3 py-1 font-sans font-medium text-xl bg-orange-500 text-white rounded-sm"
             >
               Create new category

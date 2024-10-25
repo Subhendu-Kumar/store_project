@@ -1,9 +1,10 @@
 import { useState } from "react";
 import Categories from "./Categories";
 import { product_items } from "@/data";
+import AllProducts from "./AllProducts";
 
 const ProductsHome = () => {
-  const [tab, setTab] = useState("categories");
+  const [tab, setTab] = useState("all_products");
 
   return (
     <div className="w-full h-full p-4 overflow-y-scroll pb-20">
@@ -28,6 +29,7 @@ const ProductsHome = () => {
         })}
       </div>
       {tab === "categories" && <Categories />}
+      {tab === "all_products" && <AllProducts />}
     </div>
   );
 };

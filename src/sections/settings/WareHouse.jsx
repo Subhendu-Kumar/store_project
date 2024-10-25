@@ -5,14 +5,15 @@ import {
   updateWarehouse,
 } from "@/api";
 import { FaEdit } from "react-icons/fa";
+import Loader from "@/components/Loader";
 import { MdDelete } from "react-icons/md";
 import { getStoreData } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
-import { RotatingLines } from "react-loader-spinner";
 import AddWarehouse from "@/components/AddWarehouse";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import DefaultScreen from "@/components/DefaultScreen";
 import WarehouseIcon from "../../../public/ware_house.jpg";
 import AlertDialogLoader from "@/components/AlertDialogLoader";
 
@@ -93,6 +94,11 @@ const WareHouse = () => {
         state: "",
       });
     }
+  };
+
+  const handleAddWarehouse = () => {
+    setActionType("create");
+    setOpenAddWarehouseDilog(true);
   };
 
   const handleDeleteWarehouse = async () => {
@@ -192,43 +198,16 @@ const WareHouse = () => {
       />
       {fetching ? (
         <div className="w-full h-96 flex items-center justify-center">
-          <RotatingLines
-            width="80"
-            height="80"
-            color="grey"
-            visible={true}
-            strokeWidth="3"
-            strokeColor="orange"
-            animationDuration="0.75"
-            ariaLabel="rotating-lines-loading"
-          />
+          <Loader />
         </div>
       ) : warehouses?.length === 0 ? (
-        <div className="w-full h-auto flex flex-col items-center justify-center py-10 bg-zinc-100 rounded-lg">
-          <div className="w-60 h-60 rounded-full overflow-hidden">
-            <img
-              alt="warehouse"
-              src={WarehouseIcon}
-              className="w-full h-full object-left object-cover"
-            />
-          </div>
-          <h1 className="text-2xl font-semibold text-zinc-800 mt-2">
-            Add your warehouse
-          </h1>
-          <p className="text-base font-sans font-medium text-zinc-600">
-            Set up your warehouse to manage inventory, pickups, and deliveries
-            efficiently.
-          </p>
-          <button
-            onClick={() => {
-              setActionType("create");
-              setOpenAddWarehouseDilog(true);
-            }}
-            className="w-fit h-auto px-3 py-1 font-sans font-medium text-xl mt-4 bg-orange-500 text-white rounded-md"
-          >
-            Add Warehouse
-          </button>
-        </div>
+        <DefaultScreen
+          img={WarehouseIcon}
+          title="Add your warehouse"
+          buttonText="Add Warehouse"
+          action={handleAddWarehouse}
+          description="Set up your warehouse to manage inventory, pickups, and deliveries efficiently."
+        />
       ) : (
         <div className="w-full h-auto p-4 bg-gradient-to-b from-zinc-100 to-white flex flex-col items-center justify-center gap-4 rounded-md">
           <div className="w-full h-auto flex flex-col items-start justify-start">
@@ -246,10 +225,7 @@ const WareHouse = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <button
-              onClick={() => {
-                setActionType("create");
-                setOpenAddWarehouseDilog(true);
-              }}
+              onClick={handleAddWarehouse}
               className="w-fit h-auto px-3 py-1 font-sans font-medium text-xl bg-orange-500 text-white rounded-md"
             >
               Add Warehouse

@@ -16,7 +16,7 @@ const SettingsHome = ({ subTab, setSubTab }) => {
               className={`w-fit px-3 py-1 rounded-lg text-lg font-sans font-medium capitalize transition-all duration-300 ease-in-out ${
                 subTab === item.id
                   ? "bg-orange-400 text-white"
-                  : "hover:bg-orange-200 hover:underline"
+                  : "hover:bg-orange-200"
               }`}
             >
               {item.title}
