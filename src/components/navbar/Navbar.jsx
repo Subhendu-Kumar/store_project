@@ -1,8 +1,13 @@
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "../ui/button";
 import { FaStore } from "react-icons/fa6";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { clearUserData, getOwnerData, getToken } from "@/lib/utils";
-import { Select, SelectContent, SelectTrigger } from "@/components/ui/select";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -40,12 +45,11 @@ const Navbar = () => {
           Home
         </button>
         {token && (
-          <button
-            className="hover:scale-105 transition-all duration-500 ease-in-out hover:text-purple-500"
-            onClick={() => navigate("/dashboard")}
-          >
-            Dashboard
-          </button>
+          <Link to="/dashboard">
+            <button className="hover:scale-105 transition-all duration-500 ease-in-out hover:text-purple-500">
+              Dashboard
+            </button>
+          </Link>
         )}
         <button className="hover:scale-105 transition-all duration-500 ease-in-out hover:text-purple-500">
           Products
@@ -55,21 +59,23 @@ const Navbar = () => {
         </button>
       </div>
       {token ? (
-        <Select>
-          <SelectTrigger className="w-[150px] border-gray-600">
-            {user_name}
-          </SelectTrigger>
-          <SelectContent className="text-base border-gray-600 bg-zinc-50 font-sans font-medium text-center">
-            <button onClick={handleLogout}>Log out</button>
-          </SelectContent>
-        </Select>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="border-gray-500">
+              {user_name}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="left" className="w-32 p-1 text-center">
+            <button onClick={handleLogout}>logout</button>
+          </PopoverContent>
+        </Popover>
       ) : (
-        <button
-          className="w-fit h-auto px-3 py-1 bg-zinc-200 border border-gray-500 text-xl font-sans font-semibold hover:scale-105 hover:bg-zinc-300 transition-all duration-500 ease-in-out rounded-lg"
+        <Button
           onClick={() => navigate("/auth")}
+          className="text-base font-sans font-medium"
         >
           Sign In
-        </button>
+        </Button>
       )}
     </div>
   );

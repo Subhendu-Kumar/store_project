@@ -1,5 +1,9 @@
 import { FaHome } from "react-icons/fa";
+import time from "../../public/time.svg";
+import cart from "../../public/cart.svg";
+import stats from "../../public/stats.svg";
 import { CgMenuGridR } from "react-icons/cg";
+import mobile from "../../public/mobile.svg";
 import { IoIosPeople } from "react-icons/io";
 import { BiSolidOffer } from "react-icons/bi";
 import store_1 from "../../public/store_1.svg";
@@ -9,6 +13,8 @@ import store_4 from "../../public/store_4.svg";
 import store_5 from "../../public/store_5.svg";
 import stats_1 from "../../public/stats_1.svg";
 import stats_2 from "../../public/stats_2.svg";
+import details from "../../public/details.svg";
+import warehouse from "../../public/warehouse.svg";
 import { MdOutlineSettings } from "react-icons/md";
 import { FaClipboardList, FaTruck } from "react-icons/fa6";
 
@@ -96,7 +102,18 @@ export const product_items = [
   },
 ];
 
-export const imageArray = [store_1, store_2, store_3, store_4, store_5];
+export const imageArray = [
+  store_1,
+  store_2,
+  store_3,
+  store_4,
+  store_5,
+  store_1,
+  store_2,
+  store_3,
+  store_4,
+  store_5,
+];
 
 export const information = [
   {
@@ -119,5 +136,32 @@ export const information = [
       "Add staff accounts, assign different roles.",
       "Unlimited transactions, minimal transaction fees.",
     ],
+  },
+];
+
+export const features = [
+  {
+    img: time,
+    title: "Site Speed",
+  },
+  {
+    img: warehouse,
+    title: "Multi-Warehouse",
+  },
+  {
+    img: cart,
+    title: "Optimised Checkouts",
+  },
+  {
+    img: details,
+    title: "Staff Accounts",
+  },
+  {
+    img: mobile,
+    title: "Android App",
+  },
+  {
+    img: stats,
+    title: "Advanced Analytics",
   },
 ];

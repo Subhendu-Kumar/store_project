@@ -5,6 +5,9 @@ export const darkMode = ["class"];
 export const content = ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"];
 export const theme = {
   extend: {
+    backgroundImage: {
+      "custom-image": "url('./public/bg.webp')",
+    },
     animation: {
       aurora: "aurora 60s linear infinite",
       scroll:
