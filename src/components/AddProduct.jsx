@@ -165,11 +165,13 @@ const AddProduct = ({
                 name="productName"
                 value={formData.productName}
                 onChange={handleInputChange}
-                className={`border-gray-500 h-10`}
+                className={`border-gray-500 h-10 ${
+                  errors.productName && "border-red-500"
+                }`}
                 placeholder="Enter product name"
               />
               {errors.productName && (
-                <p className="text-red-500">{errors.productName}</p>
+                <p className="text-red-500 text-xs">{errors.productName}</p>
               )}
             </div>
             <div className="w-full h-auto flex flex-col items-start justify-start gap-1">
@@ -184,7 +186,11 @@ const AddProduct = ({
                 </Button>
               ) : (
                 <Select onValueChange={handleSelectChange}>
-                  <SelectTrigger className="w-full border-gray-500 h-10">
+                  <SelectTrigger
+                    className={`${
+                      errors.categoryId && "border-red-500"
+                    } w-full border-gray-500 h-10`}
+                  >
                     <SelectValue placeholder="Select product category" />
                   </SelectTrigger>
                   <SelectContent>
@@ -199,7 +205,7 @@ const AddProduct = ({
                 </Select>
               )}
               {errors.categoryId && (
-                <p className="text-red-500">{errors.categoryId}</p>
+                <p className="text-red-500 text-xs">{errors.categoryId}</p>
               )}
             </div>
             <div className="w-full h-auto flex items-center justify-center gap-4">
@@ -210,11 +216,13 @@ const AddProduct = ({
                   name="actualPrice"
                   value={formData.actualPrice}
                   onChange={handleInputChange}
-                  className={`border-gray-500 h-10`}
+                  className={`border-gray-500 h-10 ${
+                    errors.actualPrice && "border-red-500"
+                  }`}
                   placeholder="&#x20B9; Enter price"
                 />
                 {errors.actualPrice && (
-                  <p className="text-red-500">{errors.actualPrice}</p>
+                  <p className="text-red-500 text-xs">{errors.actualPrice}</p>
                 )}
               </div>
               <div className="w-[50%] h-auto flex flex-col items-start justify-start gap-1">
@@ -222,13 +230,17 @@ const AddProduct = ({
                 <Input
                   type="text"
                   name="discountedPrice"
-                  className={`border-gray-500 h-10`}
+                  className={`border-gray-500 h-10 ${
+                    errors.discountedPrice && "border-red-500"
+                  }`}
                   placeholder="&#x20B9; Enter discounted price"
                   value={formData.discountedPrice}
                   onChange={handleInputChange}
                 />
                 {errors.discountedPrice && (
-                  <p className="text-red-500">{errors.discountedPrice}</p>
+                  <p className="text-red-500 text-xs">
+                    {errors.discountedPrice}
+                  </p>
                 )}
               </div>
             </div>
@@ -239,10 +251,12 @@ const AddProduct = ({
                 value={formData.productDesc}
                 onChange={handleInputChange}
                 placeholder="Enter category description"
-                className={`min-h-20 max-h-60 border-gray-400`}
+                className={`min-h-20 max-h-60 border-gray-500 ${
+                  errors.productDesc && "border-red-500"
+                }`}
               />
               {errors.productDesc && (
-                <p className="text-red-500">{errors.productDesc}</p>
+                <p className="text-red-500 text-xs">{errors.productDesc}</p>
               )}
             </div>
             <div className="w-full h-auto flex items-start flex-col justify-start">
@@ -252,8 +266,6 @@ const AddProduct = ({
               </p>
               <div className="w-full h-auto flex items-center justify-start gap-8 mt-2">
                 <Files
-                  multiple
-                  clickable
                   accepts={[
                     "image/png",
                     "image/jpg",
@@ -263,6 +275,8 @@ const AddProduct = ({
                     "image/webp",
                     "image/svg+xml",
                   ]}
+                  multiple
+                  clickable
                   minFileSize={0}
                   maxFileSize={10000000}
                   className="files-dropzone"
@@ -310,13 +324,15 @@ const AddProduct = ({
                     name="weight"
                     value={formData.weight}
                     onChange={handleInputChange}
-                    className={`border-gray-500 h-10 w-[90%]`}
+                    className={`border-gray-500 h-10 w-[90%] ${
+                      errors.weight && "border-red-500"
+                    }`}
                     placeholder="Eg. 1.2"
                   />
                   <h1 className="text-xl font-sans font-medium">Kg</h1>
                 </div>
                 {errors.weight && (
-                  <p className="text-red-500">{errors.weight}</p>
+                  <p className="text-red-500 text-xs">{errors.weight}</p>
                 )}
               </div>
               <div className="w-[50%] h-auto flex flex-col items-start justify-start gap-1">
@@ -326,11 +342,13 @@ const AddProduct = ({
                   name="hsnCode"
                   value={formData.hsnCode}
                   onChange={handleInputChange}
-                  className={`border-gray-500 h-10`}
+                  className={`border-gray-500 h-10 ${
+                    errors.hsnCode && "border-red-500"
+                  }`}
                   placeholder="Enter the HSN Code"
                 />
                 {errors.hsnCode && (
-                  <p className="text-red-500">{errors.hsnCode}</p>
+                  <p className="text-red-500 text-xs">{errors.hsnCode}</p>
                 )}
               </div>
             </div>
@@ -338,14 +356,16 @@ const AddProduct = ({
               <p>Add quantity of product per warehouse</p>
               <button
                 onClick={() => setOpenAddProductPerWarehouseDialog(true)}
-                className="w-1/2 h-10 border border-gray-500 rounded-md"
+                className={`w-1/2 h-10 border border-gray-500 rounded-md ${
+                  errors.inventoryList && "border-red-500"
+                }`}
               >
                 {totalRecords === 0
                   ? "Add/Edit"
                   : `(Total ${totalQuantity} in ${totalRecords} warehouse)`}
               </button>
               {errors.inventoryList && (
-                <p className="text-red-500">{errors.inventoryList}</p>
+                <p className="text-red-500 text-xs">{errors.inventoryList}</p>
               )}
             </div>
             <div className="w-full flex items-center justify-between mt-4">
