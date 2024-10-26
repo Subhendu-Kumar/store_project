@@ -31,9 +31,11 @@ const AddProduct = ({
   errors,
   formData,
   setErrors,
+  actionType,
   setFormData,
   onOpenChange,
   submitProductData,
+  handleUpdateProduct,
   setOpenAddProductPerWarehouseDialog,
 }) => {
   const { toast } = useToast();
@@ -57,6 +59,10 @@ const AddProduct = ({
   };
 
   useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
     setStore_id(getStoreData()?.id);
   }, [store_id]);
 
@@ -77,7 +83,6 @@ const AddProduct = ({
     mediaData.append("file", file);
     try {
       const res = await uploadMedia(mediaData);
-      console.log(res);
       if (res?.status === 200) {
         const newPhotoPublicId = res?.data?.publicId;
         setFormData((prevData) => ({
@@ -124,8 +129,12 @@ const AddProduct = ({
     try {
       productSchema.parse(formData);
       console.log("Form data is valid:", formData);
-      // Submit the form
-      submitProductData();
+      if (actionType === "create") {
+        submitProductData();
+      }
+      if (actionType === "update") {
+        handleUpdateProduct();
+      }
     } catch (err) {
       if (err instanceof z.ZodError) {
         const formattedErrors = err.errors.reduce((acc, error) => {
@@ -144,7 +153,10 @@ const AddProduct = ({
           <DialogTitle />
         </DialogHeader>
         <div className="w-full h-full">
-          <h1 className="text-xl font-sans font-medium">Add product</h1>
+          <h1 className="text-xl font-sans font-medium hidden">
+            {actionType === "create" && "Add product"}
+            {actionType === "update" && "Update product"}
+          </h1>
           <div className="w-full absolute h-[calc(100%-28px)] overflow-y-scroll left-0 bottom-0 flex flex-col items-start justify-start gap-3 px-6 pt-4 pb-8">
             <div className="w-full h-auto flex flex-col items-start justify-start gap-1 mt-3">
               <p>Product name</p>
@@ -256,7 +268,10 @@ const AddProduct = ({
                   className="files-dropzone"
                   onChange={handleFileChange}
                 >
-                  <button className="w-16 h-16 bg-zinc-200 rounded-sm flex items-center justify-center flex-col">
+                  <button
+                    className="w-16 h-16 bg-zinc-200 rounded-sm flex items-center justify-center flex-col disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={uploadingImage || actionType === "update"}
+                  >
                     <FaCameraRetro className="text-2xl" />
                     <p className="text-xs font-sans font-medium">Upload</p>
                   </button>
@@ -329,10 +344,17 @@ const AddProduct = ({
                   ? "Add/Edit"
                   : `(Total ${totalQuantity} in ${totalRecords} warehouse)`}
               </button>
+              {errors.inventoryList && (
+                <p className="text-red-500">{errors.inventoryList}</p>
+              )}
             </div>
-            <Button onClick={handleSubmit} className="mt-4">
-              Add Product
-            </Button>
+            <div className="w-full flex items-center justify-between mt-4">
+              <p>accept all terms & conditions</p>
+              <Button onClick={handleSubmit}>
+                {actionType === "create" && "Add product"}
+                {actionType === "update" && "Update product"}
+              </Button>
+            </div>
           </div>
         </div>
       </DialogContent>

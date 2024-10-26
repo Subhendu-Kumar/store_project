@@ -7,6 +7,13 @@ import {
   TableHeader,
   TableCaption,
 } from "@/components/ui/table";
+import {
+  addProduct,
+  getProducts,
+  updateProduct,
+  deleteProduct,
+  toogleProductActive,
+} from "@/api";
 import { FaEdit } from "react-icons/fa";
 import Loader from "@/components/Loader";
 import { MdDelete } from "react-icons/md";
@@ -14,21 +21,15 @@ import { getStoreData } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
-import {
-  addProduct,
-  deleteProduct,
-  getProducts,
-  toogleProductActive,
-} from "@/api";
 import { Switch } from "@/components/ui/switch";
 import AddProduct from "@/components/AddProduct";
 import ProductIcon from "../../../public/product.png";
 import DefaultScreen from "@/components/DefaultScreen";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import { CLOUDINARY_BASE_URL, CLOUDINARY_KEY } from "@/config";
 import AlertDialogLoader from "@/components/AlertDialogLoader";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import AddProductPerWarehouse from "@/components/AddProductPerWarehouse";
-import ConfirmDialog from "@/components/ConfirmDialog";
 
 const AllProducts = () => {
   const { toast } = useToast();
@@ -37,11 +38,12 @@ const AllProducts = () => {
   const [fetching, setFetching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [actionType, setActionType] = useState("create");
   const [store_id, setStore_id] = useState(getStoreData()?.id);
   const [loaderDialogTitle, setLoaderDialogTitle] = useState("");
-  const [openAddProductDialog, setOpenAddProductDialog] = useState(false);
   const [productIdToUpdate, setProductIdToUpdate] = useState("");
   const [productIdToDelete, setProductIdToDelete] = useState("");
+  const [openAddProductDialog, setOpenAddProductDialog] = useState(false);
   const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
   const [
     openAddProductPerWarehouseDialog,
@@ -83,6 +85,7 @@ const AllProducts = () => {
   }, [store_id]);
 
   const handleAddProduct = () => {
+    setActionType("create");
     setOpenAddProductDialog(true);
   };
 
@@ -91,13 +94,13 @@ const AllProducts = () => {
     setIsLoading(true);
     try {
       const res = await addProduct(store_id, formData);
-      console.log(res);
       if (res.status === 201) {
         setProducts(res?.data);
         toast({
           title: "Success",
-          description: "ware house created successfully",
+          description: "product created successfully",
         });
+        fetchProducts();
       }
     } catch (error) {
       console.log(error);
@@ -129,7 +132,6 @@ const AllProducts = () => {
     setIsLoading(true);
     try {
       const res = await deleteProduct(store_id, productIdToDelete);
-      console.log(res);
       if (res?.status === 200) {
         toast({
           title: "Success",
@@ -184,6 +186,13 @@ const AllProducts = () => {
           title: "Error: Failed to update product status",
           variant: "destructive",
         });
+        const revertedProducts = products.map((product) => {
+          if (product.id === productId) {
+            return { ...product, active: !product.active };
+          }
+          return product;
+        });
+        setProducts(revertedProducts);
       }
     } catch (error) {
       console.log("Error while updating product status:", error);
@@ -202,6 +211,42 @@ const AllProducts = () => {
     }
   };
 
+  const handleUpdateProduct = async () => {
+    setLoaderDialogTitle("Updating product to server");
+    setIsLoading(true);
+    try {
+      const res = await updateProduct(store_id, productIdToUpdate, formData);
+      if (res?.status === 200) {
+        toast({
+          title: "Success",
+          description: "product updated successfully",
+        });
+        fetchProducts();
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Error while updating data to server",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+      setFormData({
+        productName: "",
+        categoryId: "",
+        actualPrice: "",
+        discountedPrice: "",
+        photoPublicId: [],
+        inventoryList: {},
+        weight: "",
+        hsnCode: "",
+        productDesc: "",
+        active: true,
+      });
+      setOpenAddProductDialog(false);
+    }
+  };
+
   const filteredProduct = products.filter(
     (product) =>
       product.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -214,10 +259,12 @@ const AllProducts = () => {
         errors={errors}
         formData={formData}
         setErrors={setErrors}
+        actionType={actionType}
         setFormData={setFormData}
         open={openAddProductDialog}
-        onOpenChange={setOpenAddProductDialog}
         submitProductData={submitProductData}
+        onOpenChange={setOpenAddProductDialog}
+        handleUpdateProduct={handleUpdateProduct}
         setOpenAddProductPerWarehouseDialog={
           setOpenAddProductPerWarehouseDialog
         }
@@ -235,8 +282,8 @@ const AllProducts = () => {
         onOpenChange={setOpenAddProductPerWarehouseDialog}
       />
       <ConfirmDialog
-        open={openConfirmationDialog}
         action={handleDeleteProduct}
+        open={openConfirmationDialog}
         onOpenChange={setOpenConfirmationDialog}
         title="This will permanently delete the product and remove all data from our servers."
       />
@@ -339,12 +386,24 @@ const AllProducts = () => {
                         <div className="w-full h-full flex justify-end gap-6 text-xl">
                           <button
                             className="hover:text-gray-500"
-                            // onClick={() => {
-                            //   setFormData(data);
-                            //   setActionType("update");
-                            //   setCategoryIdToUpdate(data.categoryId);
-                            //   setAddCategoryDialogOpen(true);
-                            // }}
+                            onClick={() => {
+                              setFormData({
+                                productName: data.productName,
+                                categoryId: data.categoryId,
+                                actualPrice: data.actualPrice.toString(),
+                                discountedPrice:
+                                  data.discountedPrice.toString(),
+                                photoPublicId: data.photoPublicId,
+                                inventoryList: {},
+                                weight: data.weight.toString(),
+                                hsnCode: data.hsnCode,
+                                productDesc: data.productDesc,
+                                active: data.active,
+                              });
+                              setActionType("update");
+                              setProductIdToUpdate(data?.id);
+                              setOpenAddProductDialog(true);
+                            }}
                           >
                             <FaEdit />
                           </button>

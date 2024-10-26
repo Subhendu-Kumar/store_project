@@ -62,8 +62,9 @@ export const productSchema = z.object({
     }),
   hsnCode: z.string().optional(),
   photoPublicId: z.array(z.string()).max(6, "Maximum of 6 images allowed"),
-  inventoryList: z.record(
-    z.string(),
-    z.number().min(0, "Quantity must be positive")
-  ),
+  inventoryList: z
+    .record(z.string(), z.number().nonnegative("Quantity must be positive"))
+    .refine((data) => Object.keys(data).length > 0, {
+      message: "At least one inventory is required",
+    }),
 });
