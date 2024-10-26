@@ -17,7 +17,6 @@ API.interceptors.request.use((req) => {
 
 /*---------- auth services ----------*/
 export const signup = async (data) => {
-  console.log("signup data: ", data);
   try {
     const response = await axios.post(`${BASE_URL}/auth/seller/register`, data);
     return response;
@@ -189,6 +188,25 @@ export const toogleProductActive = async (store_id, product_id, data) => {
       `/stores/${store_id}/products/${product_id}/partial-update`,
       data
     );
+    return response;
+  } catch (error) {
+    console.log("error: ", error);
+  }
+};
+
+/*---------- discount & offer services ----------*/
+export const getOffers = async (store_id) => {
+  try {
+    const response = await API.get(store_id);
+    return response;
+  } catch (error) {
+    console.log("error: ", error);
+  }
+};
+
+export const validateOffer = async (store_id, data) => {
+  try {
+    const response = await API.post(`/stores/${store_id}/validate-offer`, data);
     return response;
   } catch (error) {
     console.log("error: ", error);

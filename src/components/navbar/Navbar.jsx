@@ -24,13 +24,13 @@ const Navbar = () => {
   };
 
   return (
-    <div className="w-full h-16 border-b border-gray-400 px-20 flex items-center justify-between">
+    <div className="w-full h-16 border-b border-gray-200 bg-white px-20 flex items-center justify-between">
       <div
-        className="flex items-center justify-center gap-2 text-3xl font-sans font-semibold cursor-pointer"
+        className="flex items-center justify-center gap-2 text-2xl font-sans font-semibold cursor-pointer"
         onClick={() => navigate("/")}
       >
         <FaStore />
-        <p>Store</p>
+        <p>Store sync</p>
       </div>
       <div className="flex items-center justify-center gap-4 text-lg font-sans font-semibold">
         <button
