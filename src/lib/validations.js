@@ -90,3 +90,52 @@ export const storeSchema = z.object({
   country: z.string().optional(),
   storeAddress: z.string().optional(),
 });
+
+/*---------- Offer ----------*/
+export const offerSchema = z.object({
+  offerName: z.string().min(1, "Offer name is required"),
+  offerCode: z.string().min(1, "Offer code is required"),
+  offerType: z.enum(["PERCENTAGE_DISCOUNT", "FLAT_AMOUNT_DISCOUNT"]),
+  percentageValue: z
+    .string()
+    .regex(/^(100|[1-9]?[0-9])$/)
+    .optional(),
+  flatAmountValue: z
+    .string()
+    .regex(/^\d+(\.\d+)?$/)
+    .optional(),
+  minimumPurchaseAmount: z
+    .string()
+    .regex(/^\d+(\.\d+)?$/, "Minimum purchase amount must be a valid number"),
+  maximumDiscountAmount: z
+    .string()
+    .regex(/^\d+(\.\d+)?$/, "Maximum discount amount must be a valid number")
+    .refine((value, ctx) => {
+      const minPurchase = ctx?.parent.minimumPurchaseAmount;
+      const percentValue = ctx?.parent.percentageValue;
+      if (minPurchase !== undefined && percentValue !== undefined) {
+        const minPurchaseNum = parseFloat(minPurchase);
+        const percentValueNum = parseFloat(percentValue);
+        const maxAllowedDiscount = (minPurchaseNum * percentValueNum) / 100;
+        if (parseFloat(value) >= maxAllowedDiscount) {
+          ctx?.addIssue({
+            code: z.ZodIssueCode.custom,
+            message:
+              "Maximum discount amount must be less than the percentage of minimum purchase amount",
+          });
+          return false;
+        }
+      }
+      return true;
+    }),
+  startDate: z.string().min(1, "Start date is required"),
+  endDate: z.string().min(1, "End date is required"),
+  usageLimit: z
+    .string()
+    .regex(/^\d+$/, "Usage limit must be a valid integer")
+    .optional(),
+  visibilityType: z.enum(["VISIBLE_ON_STORE", "HIDDEN_ON_STORE"]),
+  usageType: z.enum(["ONLY_ONCE", "CUSTOM"]),
+  customerType: z.enum(["ANY_CUSTOMER", "FIRST_CUSTOMER", "REPEAT_CUSTOMER"]),
+  active: z.boolean(),
+});

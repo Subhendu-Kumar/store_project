@@ -4,7 +4,7 @@ import { product_items } from "@/data";
 import AllProducts from "./AllProducts";
 
 const ProductsHome = () => {
-  const [tab, setTab] = useState("all_products");
+  const [tab, setTab] = useState("categories");
 
   return (
     <div className="w-full h-full p-4 overflow-y-scroll pb-20">

@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import SettingsHome from "@/sections/settings/SettingsHome";
 import ProductsHome from "@/sections/products/ProductsHome";
 import SidebarDesktop from "@/components/sidebar/SidebarDesktop";
+import OffersDiscounts from "@/sections/offers&discounts/OffersDiscounts";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -50,9 +51,8 @@ const Dashboard = () => {
         {tab === "store_settings" && (
           <SettingsHome subTab={subTab} setSubTab={setSubTab} />
         )}
-        {tab === "products" && (
-          <ProductsHome />
-        )}
+        {tab === "products" && <ProductsHome />}
+        {tab === "offers_discounts" && <OffersDiscounts />}
       </div>
     </div>
   );

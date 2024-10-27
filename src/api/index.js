@@ -216,7 +216,7 @@ export const toogleProductActive = async (store_id, product_id, data) => {
 /*---------- discount & offer services ----------*/
 export const getOffers = async (store_id) => {
   try {
-    const response = await API.get(store_id);
+    const response = await API.get(`/stores/${store_id}/offers`);
     return response;
   } catch (error) {
     console.log("error: ", error);
@@ -226,6 +226,15 @@ export const getOffers = async (store_id) => {
 export const validateOffer = async (store_id, data) => {
   try {
     const response = await API.post(`/stores/${store_id}/validate-offer`, data);
+    return response;
+  } catch (error) {
+    console.log("error: ", error);
+  }
+};
+
+export const addOffer = async (store_id, data) => {
+  try {
+    const response = await API.put(`/stores/${store_id}/offers`, data);
     return response;
   } catch (error) {
     console.log("error: ", error);
