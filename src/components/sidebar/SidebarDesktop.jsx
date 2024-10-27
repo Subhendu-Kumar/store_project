@@ -6,7 +6,7 @@ import { RiShareForward2Line } from "react-icons/ri";
 const SidebarDesktop = ({ store, tab, setTab }) => {
   const navigate = useNavigate();
   const store_name = store?.name;
-  const custom_store = store_name?.toLowerCase().split(" ").join("_");
+  const custom_store = store_name?.toLowerCase().split(" ").join("");
 
   return (
     <div className="w-[20%] h-full border-r bg-orange-50 border-zinc-300 p-4 flex flex-col items-start justify-between">

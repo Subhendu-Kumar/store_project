@@ -34,6 +34,25 @@ export const login = async (data) => {
   }
 };
 
+/*---------- store services ----------*/
+export const getStore = async (store_id) => {
+  try {
+    const response = await API.get(`/stores/${store_id}/metadata`);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateStore = async (store_id, data) => {
+  try {
+    const response = await API.patch(`/stores/${store_id}/metadata`, data);
+    return response;
+  } catch (error) {
+    console.log("error: ", error);
+  }
+};
+
 /*---------- warehouse services ----------*/
 export const getWarehouses = async (store_id) => {
   try {

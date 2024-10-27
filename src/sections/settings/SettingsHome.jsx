@@ -1,3 +1,4 @@
+import StoreDetails from "./StoreDetails";
 import WareHouse from "./WareHouse";
 import { store_settings_items } from "@/data";
 
@@ -26,6 +27,7 @@ const SettingsHome = ({ subTab, setSubTab }) => {
       </div>
       <div className="w-full h-auto mt-4">
         {subTab === "warehouse" && <WareHouse />}
+        {subTab === "store_details" && <StoreDetails />}
       </div>
     </div>
   );

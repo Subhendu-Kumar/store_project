@@ -73,3 +73,17 @@ export const productSchema = z
     message: "Discounted price must be less than or equal to actual price",
     path: ["discountedPrice"],
   });
+
+/*---------- Store ----------*/
+export const storeSchema = z.object({
+  name: z.string().min(1, "Store name is required"),
+  storeLink: z.string().min(1, "Store link is required"),
+  mobileNo: z
+    .string()
+    .regex(/^\d{10}$/, "Mobile number must be exactly 10 digits")
+    .optional(),
+  ownerName: z.string().min(1, "Owner name is required"),
+  storeEmail: z.string().email("Invalid email address"),
+  country: z.string().optional(),
+  storeAddress: z.string().optional(),
+});

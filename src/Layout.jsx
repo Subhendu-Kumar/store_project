@@ -18,7 +18,7 @@ const Layout = () => {
   const location = useLocation();
   const [store, setStore] = useState(null);
   const [token, setToken] = useState(getToken());
-  const custom_store = store?.name.toLowerCase().split(" ").join("_");
+  const custom_store = store?.name.toLowerCase().split(" ").join("");
 
   useEffect(() => {
     setToken(getToken());
