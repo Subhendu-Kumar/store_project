@@ -5,6 +5,10 @@ import SettingsHome from "@/sections/settings/SettingsHome";
 import ProductsHome from "@/sections/products/ProductsHome";
 import SidebarDesktop from "@/components/sidebar/SidebarDesktop";
 import OffersDiscounts from "@/sections/offers&discounts/OffersDiscounts";
+import DashBoardHome from "@/sections/dashboardHome/DashBoardHome";
+import OrdersHome from "@/sections/orders/OrdersHome";
+import DeliveryHome from "@/sections/delivery/DeliveryHome";
+import CustomerHome from "@/sections/customers/CustomerHome";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -53,6 +57,10 @@ const Dashboard = () => {
         )}
         {tab === "products" && <ProductsHome />}
         {tab === "offers_discounts" && <OffersDiscounts />}
+        {tab === "home" && <DashBoardHome />}
+        {tab === "orders" && <OrdersHome />}
+        {tab === "delivery" && <DeliveryHome />}
+        {tab === "customers" && <CustomerHome />}
       </div>
     </div>
   );
