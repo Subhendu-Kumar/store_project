@@ -305,7 +305,7 @@ const AllProducts = () => {
             <Input
               type="text"
               value={searchQuery}
-              placeholder="Search categories"
+              placeholder="Search products"
               className="w-[30%] h-10 border-gray-500"
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -313,7 +313,7 @@ const AllProducts = () => {
               onClick={handleAddProduct}
               className="w-fit h-auto px-3 py-1 font-sans font-medium text-xl bg-orange-500 text-white rounded-sm"
             >
-              Create new category
+              Create new product
             </button>
           </div>
           <div className="w-full h-auto mt-6 rounded-sm">

@@ -147,7 +147,7 @@ const OffersDiscounts = () => {
         ) : (
           <div className="w-full h-auto p-4 bg-gradient-to-b from-zinc-100 to-white flex flex-col items-center justify-center gap-4 rounded-md">
             <div className="w-full h-auto flex flex-col items-start justify-start">
-              <h1 className="text-xl font-medium font-sans">Warehouses</h1>
+              <h1 className="text-xl font-medium font-sans">Offers</h1>
               <p className="text-base font-sans font-light text-zinc-500">
                 Organize and oversee your inventory storage details.
               </p>
@@ -156,7 +156,7 @@ const OffersDiscounts = () => {
               <Input
                 type="text"
                 value={searchQuery}
-                placeholder="Search warehouses"
+                placeholder="Search offers"
                 className="w-96 h-10 border-gray-500 bg-white"
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
