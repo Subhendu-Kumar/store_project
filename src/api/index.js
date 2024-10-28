@@ -162,7 +162,7 @@ export const uploadMedia = async (data) => {
 /*---------- product services ----------*/
 export const getProducts = async (store_id) => {
   try {
-    const response = await API.get(`/stores/${store_id}/products`);
+    const response = await API.get(`/stores/public/${store_id}/products`); //temporary
     return response;
   } catch (error) {
     console.log("error: ", error);
