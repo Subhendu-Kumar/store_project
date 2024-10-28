@@ -32,15 +32,15 @@ const StoreDetails = () => {
           setStoreFormData({
             name: res?.data?.name,
             storeLink: res?.data?.storeLink,
-            ownerName: res?.data?.ownerName,
-            mobileNo: res?.data?.mobileNo.toString(),
-            country: res?.data?.country,
-            storeEmail: res?.data?.storeEmail,
-            storeAddress: res?.data?.storeAddress,
+            ownerName: res?.data?.ownerName || "",
+            mobileNo: res?.data?.mobileNo?.toString() || "",
+            country: res?.data?.country || "",
+            storeEmail: res?.data?.storeEmail || "",
+            storeAddress: res?.data?.storeAddress || "",
           });
         }
       } catch (error) {
-        console.log("error fetching warehouses: ", error);
+        console.log("error fetching store details: ", error);
       } finally {
         setFetching(false);
       }
