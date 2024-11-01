@@ -76,7 +76,7 @@ const Auth = () => {
             title: "Success",
             description: "login in to your account",
           });
-          navigate("/");
+          navigate("/dashboard", { replace: true });
         }
       }
       if (res?.status !== 200) {

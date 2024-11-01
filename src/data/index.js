@@ -20,7 +20,7 @@ import { FaClipboardList, FaTruck } from "react-icons/fa6";
 
 export const sidebar_items = [
   {
-    id: "home",
+    id: "d_home",
     title: "home",
     icon: FaHome,
   },
