@@ -2,13 +2,12 @@ import axios from "axios";
 import { BASE_URL } from "@/config";
 import { getToken } from "@/lib/utils";
 
-const token = getToken();
-
 const API = axios.create({
   baseURL: BASE_URL,
 });
 
 API.interceptors.request.use((req) => {
+  const token = getToken();
   if (token) {
     req.headers.Authorization = `Bearer ${token}`;
   }
