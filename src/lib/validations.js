@@ -69,10 +69,20 @@ export const productSchema = z
         message: "At least one inventory is required",
       }),
   })
-  .refine((data) => data.actualPrice >= data.discountedPrice, {
-    message: "Discounted price must be less than or equal to actual price",
-    path: ["discountedPrice"],
-  });
+  .refine(
+    (data) => {
+      // Convert actualPrice and discountedPrice to numbers before comparison
+      const actualPrice = parseFloat(data.actualPrice);
+      const discountedPrice = data.discountedPrice
+        ? parseFloat(data.discountedPrice)
+        : undefined;
+      return !discountedPrice || actualPrice >= discountedPrice;
+    },
+    {
+      message: "Discounted price must be less than or equal to actual price",
+      path: ["discountedPrice"],
+    }
+  );
 
 /*---------- Store ----------*/
 export const storeSchema = z.object({
