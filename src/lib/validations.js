@@ -137,7 +137,8 @@ export const offerSchema = z.object({
         }
       }
       return true;
-    }),
+    })
+    .optional(),
   startDate: z.string().min(1, "Start date is required"),
   endDate: z.string().min(1, "End date is required"),
   usageLimit: z

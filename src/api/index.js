@@ -222,18 +222,18 @@ export const getOffers = async (store_id) => {
   }
 };
 
-export const validateOffer = async (store_id, data) => {
+export const addOffer = async (store_id, data) => {
   try {
-    const response = await API.post(`/stores/${store_id}/validate-offer`, data);
+    const response = await API.put(`/stores/${store_id}/offers`, data);
     return response;
   } catch (error) {
     console.log("error: ", error);
   }
 };
 
-export const addOffer = async (store_id, data) => {
+export const deleteOffer = async (store_id, offer_id) => {
   try {
-    const response = await API.put(`/stores/${store_id}/offers`, data);
+    const response = await API.delete(`/stores/${store_id}/offers/${offer_id}`);
     return response;
   } catch (error) {
     console.log("error: ", error);

@@ -1,26 +1,30 @@
 import Loader from "@/components/Loader";
+import { MdDelete } from "react-icons/md";
 import { getStoreData } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import { addOffer, getOffers } from "@/api";
+import { FaShareAlt } from "react-icons/fa";
 import AddOffer from "@/components/AddOffer";
+import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
+import { BiSolidOffer } from "react-icons/bi";
 import OfferIcon from "../../../public/offer.png";
 import DefaultScreen from "@/components/DefaultScreen";
+import ConfirmDialog from "@/components/ConfirmDialog";
+import { addOffer, deleteOffer, getOffers } from "@/api";
 import AlertDialogLoader from "@/components/AlertDialogLoader";
-import { MdDelete } from "react-icons/md";
-import { Input } from "@/components/ui/input";
-import { FaShareAlt } from "react-icons/fa";
-import { BiSolidOffer } from "react-icons/bi";
-import { useToast } from "@/hooks/use-toast";
 
 const OffersDiscounts = () => {
   const { toast } = useToast();
   const [offers, setOffers] = useState([]);
   const [errors, setErrors] = useState({});
   const [fetching, setFetching] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [offerIdToDelete, setOfferIdToDelete] = useState("");
   const [store_id, setStore_id] = useState(getStoreData()?.id);
   const [openAddOfferDialog, setOpenAddOfferDialog] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
   const [formData, setFormData] = useState({
     offerName: "",
     offerCode: "",
@@ -108,6 +112,56 @@ const OffersDiscounts = () => {
     }
   };
 
+  const handleDeleteOffer = async () => {
+    setIsLoading(true);
+    setDeleting(true);
+    try {
+      const res = await deleteOffer(store_id, offerIdToDelete);
+      if (res?.status === 202) {
+        toast({
+          title: "Success",
+          description: res?.data?.msg,
+        });
+        fetchOffers();
+      } else {
+        toast({
+          title: "Error deleting offer",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Error deleting offer",
+        variant: "destructive",
+      });
+    } finally {
+      setDeleting(false);
+      setIsLoading(false);
+      setOpenConfirmationDialog(false);
+    }
+  };
+
+  const handleCopyOfferCode = (offer_code) => {
+    const upperCaseOfferCode = offer_code.toUpperCase();
+    navigator.clipboard
+      .writeText(upperCaseOfferCode)
+      .then(() => {
+        console.log("Offer code copied to clipboard!");
+        toast({
+          title: "Success",
+          description: "offer code successfully copied to clipboard",
+        });
+      })
+      .catch((error) => {
+        console.error("Failed to copy offer code: ", error);
+        toast({
+          title: "Error copying offer code",
+          variant: "destructive",
+        });
+      });
+  };
+
   const filteredOffers = offers.filter((offer) =>
     offer.offerCode.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -125,8 +179,14 @@ const OffersDiscounts = () => {
       />
       <AlertDialogLoader
         open={isLoading}
-        title={"Adding offer..."}
         onOpenChange={setIsLoading}
+        title={deleting ? "Deleting offer..." : "Adding offer..."}
+      />
+      <ConfirmDialog
+        action={handleDeleteOffer}
+        open={openConfirmationDialog}
+        onOpenChange={setOpenConfirmationDialog}
+        title="This will permanently delete the offer and remove all data from our servers."
       />
       <h1 className="text-2xl font-semibold font-sans border-b border-gray-500 pb-3">
         Offers & Discounts
@@ -179,21 +239,34 @@ const OffersDiscounts = () => {
                       <p className="font-semibold">{data?.offerCode}</p>
                     </h1>
                     <p className="text-base text-gray-600 font-sans font-normal capitalize">
-                      {data?.percentageValue}% off (upto{" "}
-                      {data?.maximumDiscountAmount}) on orders above{" "}
-                      {data?.minimumPurchaseAmount}
+                      {data?.offerType === "PERCENTAGE_DISCOUNT" && (
+                        <span>
+                          {data?.percentageValue}% off (upto &#8377;
+                          {data?.maximumDiscountAmount}) on orders above &#8377;
+                          {data?.minimumPurchaseAmount}
+                        </span>
+                      )}
+                      {data?.offerType === "FLAT_AMOUNT_DISCOUNT" && (
+                        <span>
+                          flat &#8377;{data?.flatAmountValue} discount on oders
+                          above &#8377;{data?.minimumPurchaseAmount}
+                        </span>
+                      )}
                     </p>
                   </div>
                   <div className="flex items-center justify-center gap-4 text-xl">
-                    <button className="hover:text-gray-500 text-xl bg-gray-200 p-2 rounded-full">
+                    <button
+                      className="hover:text-gray-500 text-xl bg-gray-200 p-2 rounded-full"
+                      onClick={() => handleCopyOfferCode(data?.offerCode)}
+                    >
                       <FaShareAlt />
                     </button>
                     <button
                       className="hover:text-gray-500 text-xl bg-gray-200 p-2 rounded-full"
-                      // onClick={() => {
-                      //   setWarehouseIdToDelete(data.warehouseId);
-                      //   setOpenConfirmationDialog(true);
-                      // }}
+                      onClick={() => {
+                        setOfferIdToDelete(data?.id);
+                        setOpenConfirmationDialog(true);
+                      }}
                     >
                       <MdDelete />
                     </button>

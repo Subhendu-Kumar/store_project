@@ -98,7 +98,7 @@ const AddOffer = ({
                 <label
                   className={`p-4 border rounded-lg cursor-pointer flex items-center ${
                     formData.offerType === "PERCENTAGE_DISCOUNT"
-                      ? "border-blue-500 shadow-md"
+                      ? "border-orange-500 shadow-md"
                       : "border-gray-300"
                   }`}
                 >
@@ -116,7 +116,7 @@ const AddOffer = ({
                   <span
                     className={`w-4 h-4 mr-2 rounded-full border-2 flex items-center justify-center ${
                       formData.offerType === "PERCENTAGE_DISCOUNT"
-                        ? "border-blue-500 bg-blue-500"
+                        ? "border-orange-500 bg-orange-500"
                         : "border-gray-400"
                     }`}
                   >
@@ -137,7 +137,7 @@ const AddOffer = ({
                 <label
                   className={`p-4 border rounded-lg cursor-pointer flex items-center ${
                     formData.offerType === "FLAT_AMOUNT_DISCOUNT"
-                      ? "border-blue-500 shadow-md"
+                      ? "border-orange-500 shadow-md"
                       : "border-gray-300"
                   }`}
                 >
@@ -155,7 +155,7 @@ const AddOffer = ({
                   <span
                     className={`w-4 h-4 mr-2 rounded-full border-2 flex items-center justify-center ${
                       formData.offerType === "FLAT_AMOUNT_DISCOUNT"
-                        ? "border-blue-500 bg-blue-500"
+                        ? "border-orange-500 bg-orange-500"
                         : "border-gray-400"
                     }`}
                   >
@@ -249,28 +249,30 @@ const AddOffer = ({
                   </span>
                 )}
               </div>
-              <div className="w-full h-auto flex flex-col items-start justify-start gap-1">
-                <label
-                  htmlFor="maximumDiscountAmount"
-                  className="block text-sm font-medium "
-                >
-                  Maximum Discount Amount
-                </label>
-                <Input
-                  type="text"
-                  name="maximumDiscountAmount"
-                  id="maximumDiscountAmount"
-                  value={formData.maximumDiscountAmount}
-                  onChange={handleChange}
-                  placeholder="Maximum Discount Amount"
-                  className="border-gray-400 h-10"
-                />
-                {errors.maximumDiscountAmount && (
-                  <span className="text-red-500">
-                    {errors.maximumDiscountAmount._errors[0]}
-                  </span>
-                )}
-              </div>
+              {formData.offerType === "PERCENTAGE_DISCOUNT" && (
+                <div className="w-full h-auto flex flex-col items-start justify-start gap-1">
+                  <label
+                    htmlFor="maximumDiscountAmount"
+                    className="block text-sm font-medium "
+                  >
+                    Maximum Discount Amount
+                  </label>
+                  <Input
+                    type="text"
+                    name="maximumDiscountAmount"
+                    id="maximumDiscountAmount"
+                    value={formData.maximumDiscountAmount}
+                    onChange={handleChange}
+                    placeholder="Maximum Discount Amount"
+                    className="border-gray-400 h-10"
+                  />
+                  {errors.maximumDiscountAmount && (
+                    <span className="text-red-500">
+                      {errors.maximumDiscountAmount._errors[0]}
+                    </span>
+                  )}
+                </div>
+              )}
               <div className="w-full h-auto flex flex-col items-start justify-start gap-1">
                 <label
                   htmlFor="startDate"
