@@ -19,9 +19,15 @@ const SidebarDesktop = ({ store }) => {
             <FaStore />
             <p className="capitalize">{store_name}</p>
           </div>
-          <div className="text-base">
+          <a
+            className="text-base"
+            href={`https://buysync.vercel.app/${store_name
+              .split(" ")
+              .join("")}`}
+              target="_blank"
+          >
             <RiShareForward2Line />
-          </div>
+          </a>
         </div>
         <div className="w-full h-auto flex items-start justify-start flex-col">
           {sidebar_items.map((item, idx) => {
