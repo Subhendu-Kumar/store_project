@@ -7,6 +7,9 @@ const SidebarDesktop = ({ store }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const store_name = store?.name;
+  const store_url = store?.url;
+
+  console.log(store_url);
 
   return (
     <div className="w-[20%] h-full border-r bg-orange-50 border-zinc-300 p-4 flex flex-col items-start justify-between">
@@ -20,11 +23,9 @@ const SidebarDesktop = ({ store }) => {
             <p className="capitalize">{store_name}</p>
           </div>
           <a
+            target="_blank"
             className="text-base"
-            href={`https://buysync.vercel.app/${store_name
-              .split(" ")
-              .join("")}`}
-              target="_blank"
+            href={`https://buysync.vercel.app/${store_url}`}
           >
             <RiShareForward2Line />
           </a>

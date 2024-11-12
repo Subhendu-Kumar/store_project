@@ -71,6 +71,7 @@ const Auth = () => {
       } else {
         res = await login(formData);
         if (res?.status === 200) {
+          console.log(res);
           saveUserData(res?.data);
           toast({
             title: "Success",

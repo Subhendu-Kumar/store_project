@@ -12,6 +12,7 @@ export const saveUserData = (response) => {
   const storeData = {
     id: response.store_id,
     name: response.store_name,
+    url: response.store_url,
   };
   localStorage.setItem(STORE_KEY, JSON.stringify(storeData));
   // Save owner data
